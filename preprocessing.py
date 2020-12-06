@@ -239,25 +239,46 @@ class PowerTransform(TransformerMixin):
 
 
 list_delete = ['diabetes_presence']
-list_mean = []
+list_mean = ['kurtosis_oxygen','skewness_glucose', 'mean_glucose', 'std_oxygen', 'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen', 'final_weight']
 list_median = ['education-num', 'capital-gain', 'age', 'pregnant', 'hours-per-week', 'capital-loss']
-list_outliers_nan = [
+list_outliers = [
+    'kurtosis_oxygen', 'skewness_glucose', 'mean_glucose', 'std_oxygen',
+    'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen',
+    'capital-gain', 'final_weight', 'capital-loss'
+]
+list_transform_yeo = ['education-num', 'kurtosis_oxygen', 'skewness_glucose', 'mean_glucose', 'std_oxygen', 'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen']
+
+pipeline1 =  Pipeline([
+    ('Clean_data', CleanData()),
+    ('Outliers', OutlierDetection('percentile', list_outliers)),
+    ('Missing_values_delete',  MissingValues('delete', list_delete)),
+    ('Missing_values_median',  MissingValues('median', list_median)),
+    ('Missing_values_mean',  MissingValues('mean', list_mean)),
+    # ('Outliers', OutlierDetection('percentile', list_outliers)),
+    ('Transformer_yeo', PowerTransform('yeo-johnson', list_transform_yeo)),
+])
+
+
+list_delete2 = ['diabetes_presence']
+list_mean2 = []
+list_median2 = ['education-num', 'capital-gain', 'age', 'pregnant', 'hours-per-week', 'capital-loss']
+list_outliers_nan2 = [
     'kurtosis_oxygen', 'skewness_glucose', 'mean_glucose', 'std_oxygen',
     'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen',
 ]
 
-list_outliers_percentile = ['capital-gain', 'final_weight', 'capital-loss']
-list_transform_yeo = ['education-num', 'kurtosis_oxygen', 'skewness_glucose', 'mean_glucose', 'std_oxygen', 'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen']
-list_imputer = ['kurtosis_oxygen','skewness_glucose', 'mean_glucose', 'std_oxygen', 'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen', 'final_weight']
+list_outliers_percentile2 = ['capital-gain', 'final_weight', 'capital-loss']
+list_transform_yeo2 = ['education-num', 'kurtosis_oxygen', 'skewness_glucose', 'mean_glucose', 'std_oxygen', 'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen']
+list_imputer2 = ['kurtosis_oxygen','skewness_glucose', 'mean_glucose', 'std_oxygen', 'skewness_oxygen', 'kurtosis_glucose', 'std_glucose', 'mean_oxygen', 'final_weight']
 
 pipeline2 =  Pipeline([
     ('Clean_data', CleanData()),
-    ('Missing_values_delete',  MissingValues('delete', list_delete)),
-    ('Missing_values_median',  MissingValues('median', list_median)),
-    ('Outliers_nan', OutlierDetection('nan', list_outliers_nan)),
-    ('Knn_impute', Imputer(list_imputer, 10)),
-    ('Outliers_percentile', OutlierDetection('percentile', list_outliers_percentile)),
-    ('Transformer_yeo', PowerTransform('yeo-johnson', list_transform_yeo)),
+    ('Missing_values_delete',  MissingValues('delete', list_delete2)),
+    ('Missing_values_median',  MissingValues('median', list_median2)),
+    ('Outliers_nan', OutlierDetection('nan', list_outliers_nan2)),
+    ('Knn_impute', Imputer(list_imputer2, 10)),
+    ('Outliers_percentile', OutlierDetection('percentile', list_outliers_percentile2)),
+    ('Transformer_yeo', PowerTransform('yeo-johnson', list_transform_yeo2)),
 ])
 
 
