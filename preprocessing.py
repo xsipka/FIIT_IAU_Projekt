@@ -282,12 +282,16 @@ pipeline2 =  Pipeline([
 ])
 
 
-def preprocess_dataset(medical_data, personal_data):
+def preprocess_dataset(medical_data, personal_data, flag):
 
     data = merge_files(medical_data, personal_data)
     data_pipe = data.copy(deep = True)
-
-    transformed = pipeline2.fit_transform(data_pipe)
+    
+    
+    if flag == 1:
+        transformed = pipeline1.fit_transform(data_pipe)
+    if flag == 2:
+        transformed = pipeline2.fit_transform(data_pipe)
 
     all_columns = [k for k in column_dict]
     data_final = pd.DataFrame(data = transformed, columns = all_columns)
